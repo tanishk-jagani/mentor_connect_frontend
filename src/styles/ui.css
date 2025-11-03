@@ -1,0 +1,90 @@
+/* src/styles/ui.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Typography + container rhythm */
+@layer base {
+    html {
+        @apply antialiased;
+    }
+
+    body {
+        @apply bg-[#f8fafc] text-slate-800;
+    }
+}
+
+/* Reusable components */
+@layer components {
+    .container-pro {
+        @apply max-w-6xl mx-auto px-6 lg:px-8;
+    }
+
+    .card {
+        @apply bg-white border border-slate-200 rounded-2xl shadow-sm;
+    }
+
+    .card-section {
+        @apply border-t border-slate-100 mt-6 pt-6;
+    }
+
+    .title-lg {
+        @apply text-2xl font-semibold tracking-tight;
+    }
+
+    .subtitle {
+        @apply text-slate-600 text-sm;
+    }
+
+    .btn {
+        @apply inline-flex items-center justify-center rounded-xl px-3.5 py-2.5 text-sm font-medium transition;
+    }
+
+    .btn-primary {
+        @apply btn bg-blue-600 text-white hover:bg-blue-700 shadow-sm;
+    }
+
+    .btn-outline {
+        @apply btn border border-slate-300 text-slate-700 hover:bg-slate-50;
+    }
+
+    .btn-ghost {
+        @apply btn text-slate-600 hover:bg-slate-50;
+    }
+
+    .btn-danger {
+        @apply btn bg-rose-600 text-white hover:bg-rose-700;
+    }
+
+    .field {
+        @apply w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 transition;
+    }
+
+    .label {
+        @apply block text-xs font-medium text-slate-500 mb-1.5;
+    }
+
+    .textarea {
+        @apply field min-h-[110px];
+    }
+
+    .select {
+        @apply field pr-8;
+    }
+
+    .meta {
+        @apply inline-flex items-center gap-2 text-sm text-slate-600;
+    }
+
+    .chip {
+        @apply inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700;
+    }
+
+    .chip-plain {
+        @apply inline-flex items-center rounded-full bg-slate-100 text-slate-700 text-xs px-3 py-1;
+    }
+
+    .divider {
+        @apply h-px bg-slate-100 my-5;
+    }
+}

@@ -1,0 +1,77 @@
+import { useState } from "react";
+import Select from "react-select";
+import axios from "axios";
+const API = import.meta.env.VITE_API_BASE || "http://localhost:4000/api";
+
+const tagOptions = [
+  { value: "Web Development", label: "Web Development" },
+  { value: "Data Science", label: "Data Science" },
+  { value: "UI/UX", label: "UI/UX" },
+  { value: "Career Guidance", label: "Career Guidance" },
+  { value: "Cloud Computing", label: "Cloud Computing" },
+  { value: "Cyber Security", label: "Cyber Security" },
+];
+
+export default function Onboarding() {
+  const [type, setType] = useState("mentee");
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
+  const [tags, setTags] = useState([]);
+
+  return (
+    <div className="container py-10">
+      <div className="card max-w-2xl mx-auto space-y-6">
+        <h2 className="text-2xl font-semibold">Create your profile</h2>
+
+        <div className="flex gap-3">
+          <button
+            className={`btn ${type === "mentee" ? "bg-gray-200" : ""}`}
+            onClick={() => setType("mentee")}
+          >
+            I’m a Mentee
+          </button>
+          <button
+            className={`btn ${type === "mentor" ? "bg-gray-200" : ""}`}
+            onClick={() => setType("mentor")}
+          >
+            I’m a Mentor
+          </button>
+        </div>
+
+        <input
+          type="text"
+          className="w-full border rounded-xl p-3"
+          placeholder="Your full name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+
+        <textarea
+          className="w-full border rounded-xl p-3"
+          placeholder={
+            type === "mentee"
+              ? "What are your learning goals?"
+              : "Describe your professional background"
+          }
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+        />
+
+        <div>
+          <label className="text-sm text-gray-500 block mb-1">Select Skills / Interests</label>
+          <Select
+            isMulti
+            options={tagOptions}
+            value={tags}
+            onChange={setTags}
+            className="text-black"
+          />
+        </div>
+
+        <button className="btn w-full bg-blue-600 text-white hover:shadow-lg">
+          Save Profile & Continue
+        </button>
+      </div>
+    </div>
+  );
+}
