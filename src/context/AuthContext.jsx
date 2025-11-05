@@ -30,8 +30,10 @@ export const AuthProvider = ({ children }) => {
         withCredentials: true,
       });
       setUser(data);
+      return data;
     } catch {
       setUser(null);
+      return null;
     } finally {
       setLoading(false);
     }

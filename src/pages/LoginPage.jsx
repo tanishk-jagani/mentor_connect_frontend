@@ -18,7 +18,7 @@ export default function LoginPage() {
 
   // If already logged in, bounce based on context (no /auth/me here)
   useEffect(() => {
-    if (loading) return;
+    if (loading || busy) return;
     if (!user) return;
 
     if (user.needsOnboarding) {
@@ -28,7 +28,7 @@ export default function LoginPage() {
     } else if (user.role === "mentee") {
       navigate("/dashboard/mentee", { replace: true });
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, busy, navigate]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -52,20 +52,47 @@ export default function LoginPage() {
       });
 
       // Server contract: { user, needsOnboarding, redirect }
-      if (data?.user) setUser(data.user); // optimistic: update context immediately
-
+      // if (data?.user) setUser(data.user); // optimistic: update context immediately
+      if (data?.user) {
+        // carry the onboarding flag into context so the effect can see it
+        setUser({
+          ...data.user,
+          needsOnboarding: data.needsOnboarding === true,
+        });
+      }
+      // If server instructed a redirect, follow it.
       if (data?.redirect) {
         navigate(data.redirect, { replace: true });
         return;
       }
-      if (data?.needsOnboarding) {
+
+      // Server may indicate onboarding either as top-level `needsOnboarding`
+      // or nested inside `user.needsOnboarding`. Check both shapes.
+      const needsOnboarding =
+        data?.needsOnboarding ?? data?.user?.needsOnboarding ?? false;
+      if (needsOnboarding) {
         navigate("/onboarding", { replace: true });
         return;
       }
 
-      // Fallback: refresh once to sync session, then route by role
-      await refresh();
-      const roleNow = data?.user?.role ?? user?.role;
+      // Fallback: refresh once to sync session, then route by role or onboarding flag
+      const refreshed = await refresh();
+      const refreshedUser = refreshed ?? null;
+
+      // If refreshed session says they still need onboarding, route there.
+      if (
+        refreshedUser?.needsOnboarding ||
+        refreshedUser?.user?.needsOnboarding
+      ) {
+        navigate("/onboarding", { replace: true });
+        return;
+      }
+
+      const roleNow =
+        data?.user?.role ??
+        refreshedUser?.role ??
+        refreshedUser?.user?.role ??
+        user?.role;
       if (roleNow === "mentor") {
         navigate("/dashboard/mentor", { replace: true });
       } else if (roleNow === "mentee") {

@@ -20,7 +20,11 @@ const API = import.meta.env.VITE_API_BASE || "http://localhost:4000/api";
 
 export default function AdminDashboard() {
   const { user, loading, logout } = useContext(AuthContext);
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({
+    topMentors: [],
+    totalUsers: [],
+    totals: {},
+  });
   const [tab, setTab] = useState("overview");
   const [users, setUsers] = useState([]);
   const [sessions, setSessions] = useState([]);
@@ -56,6 +60,7 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => {
+    console.log(user, "<<<<<<<<<<<<<<user");
     if (loading || !user) return;
     if (user.role !== "admin") return;
     loadStats();
@@ -148,8 +153,8 @@ export default function AdminDashboard() {
     </div>
   );
 
-  const topMentorData = Array.isArray(stats.topMentors)
-    ? stats.topMentors.map((m) => ({
+  const topMentorData = Array.isArray(stats.topMentors || [])
+    ? stats?.topMentors?.map((m) => ({
         name: m.mentor?.name || "Unknown Mentor",
         rating: Number(m.avg) || 0,
       }))

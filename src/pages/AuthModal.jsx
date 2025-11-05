@@ -24,8 +24,9 @@ export default function AuthModal({ initialRole = "mentee", onClose }) {
         withCredentials: true,
       });
       // role-based redirect
-      if (user.role === "mentor") window.location.href = "/dashboard/mentor";
-      else window.location.href = "/dashboard/mentee";
+      // if (user.role === "mentor") window.location.href = "/dashboard/mentor";
+      // else window.location.href = "/dashboard/mentee";
+      window.location.href = "/";
     } catch (err) {
       setError(err?.response?.data?.message || "Something went wrong");
     } finally {
